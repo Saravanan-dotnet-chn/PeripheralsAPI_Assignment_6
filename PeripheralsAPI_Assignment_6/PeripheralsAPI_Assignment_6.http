@@ -1,0 +1,6 @@
+@PeripheralsAPI_Assignment_6_HostAddress = http://localhost:5281
+
+GET {{PeripheralsAPI_Assignment_6_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
