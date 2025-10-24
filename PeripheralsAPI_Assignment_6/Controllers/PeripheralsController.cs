@@ -11,16 +11,19 @@ namespace PeripheralsAPI_Assignment_6.Controllers
     public class PeripheralsController : ControllerBase
     {
         private readonly IPeripheralRepository<Peripheral> _repository;
+        private readonly ILogger<Peripheral> _logger;
 
-        public PeripheralsController(IPeripheralRepository<Peripheral> repository)
+        public PeripheralsController(IPeripheralRepository<Peripheral> repository, ILogger<Peripheral> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         // GET: api/peripherals
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Peripheral>>> GetPeripherals()
         {
+            _logger.LogInformation("Getting all Peripherals");
             var peripherals = await _repository.GetAllAsync();
             return Ok(peripherals);
         }
@@ -29,6 +32,7 @@ namespace PeripheralsAPI_Assignment_6.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Peripheral>> GetPeripheral(int id)
         {
+            _logger.LogInformation("Getting Peripheral By ID");
             var peripheral = await _repository.GetByIdAsync(id);
             if (peripheral == null)
                 return NotFound();
@@ -40,6 +44,7 @@ namespace PeripheralsAPI_Assignment_6.Controllers
         [HttpPost]
         public async Task<ActionResult<Peripheral>> AddPeripheral(Peripheral peripheral)
         {
+            _logger.LogInformation("Adding Peripherals");
             var created = await _repository.AddAsync(peripheral);
             return CreatedAtAction(nameof(GetPeripheral), new { id = created.Id }, created);
         }
@@ -53,6 +58,7 @@ namespace PeripheralsAPI_Assignment_6.Controllers
 
             try
             {
+                _logger.LogInformation("Updating Peripheral By ID");
                 await _repository.UpdateAsync(peripheral);
             }
             catch (DbUpdateConcurrencyException)
@@ -70,7 +76,7 @@ namespace PeripheralsAPI_Assignment_6.Controllers
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
                 return NotFound();
-
+            _logger.LogInformation("Deleting all Peripheral By ID");
             await _repository.DeleteAsync(id);
             return NoContent();
         }
